@@ -1,0 +1,3 @@
+include 'httpclient'
+
+rootProject.name = 'magpie-asset'

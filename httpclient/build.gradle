@@ -1,0 +1,67 @@
+ext {
+    if (!project.hasProperty("env")) {
+        println 'property[env] is not setting, using local default' 
+        env = "local"
+    }
+    PUBLISH_GROUP_ID = 'org.magpie.asset'
+    PUBLISH_ARTIFACT_ID = 'magpie-asset'
+}
+
+sourceSets {
+    main {
+        resources {
+            println 'property[env] is ' + project['env']
+	    if (project['env'] == 'dev') {
+	       	srcDirs 'src/main/resources', 'src/main/resources/dev'
+	    } else if (project['env'] == 'test') {
+	     	srcDirs 'src/main/resources', 'src/main/resources/test'
+	    } else if (project['env'] == 'prod') {
+	       	srcDirs 'src/main/resources', 'src/main/resources/prod'
+	    } else {
+	       	srcDirs 'src/main/resources'
+	    }
+        }
+    }
+}
+
+dependencies {
+    compile 'commons-codec:commons-codec:1.8'
+    compile 'org.apache.httpcomponents:httpclient:4.5.2'
+    compile 'org.apache.httpcomponents:httpmime:4.5.2'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            groupId project.PUBLISH_GROUP_ID
+            artifactId project.PUBLISH_ARTIFACT_ID
+            version project.PUBLISH_VERSION
+        }
+    }
+}
+
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        def url = "http://10.108.19.162:8081/nexus/content/repositories/releases"
+//        if (project.PUBLISH_VERSION.endsWith("SNAPSHOT")) {
+//            url = "http://10.108.19.162:8081/nexus/content/repositories/snapshots"
+//        }
+//        repository(url: url) {
+//            authentication(userName: "chenli01", password: "04chenliIII")
+//        }
+//        pom.project {
+//            groupId project.PUBLISH_GROUP_ID
+//            artifactId project.PUBLISH_ARTIFACT_ID
+//            version project.PUBLISH_VERSION
+//        }
+//    }
+//}

@@ -1,0 +1,32 @@
+ext {
+    PUBLISH_VERSION = '0.0.1-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse-wtp'
+    apply plugin: 'maven'
+
+    eclipse {
+        classpath {
+            downloadSources=true
+        }
+    }
+
+    repositories {
+        mavenCentral();
+        jcenter();
+    }
+
+    dependencies {
+        compile 'org.slf4j:slf4j-api:1.7.21'
+        compile 'org.slf4j:jcl-over-slf4j:1.7.21'
+        compile 'org.logback-extensions:logback-ext-spring:0.1.2'
+        compile 'ch.qos.logback:logback-classic:1.1.7'
+        compile 'com.alibaba:fastjson:1.1.30'
+        compile 'org.apache.commons:commons-lang3:3.1'
+        compile 'joda-time:joda-time:2.8.1'
+
+        testCompile 'junit:junit:4.12'
+    }
+}
