@@ -1,0 +1,2 @@
+# magpie-asset
+development asset
