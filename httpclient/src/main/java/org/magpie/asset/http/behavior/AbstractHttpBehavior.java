@@ -20,7 +20,8 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractHttpBehavior implements HttpBehavior {
 	private final Logger logger = LoggerFactory.getLogger(AbstractHttpBehavior.class);
 
-	public abstract CloseableHttpClient build();
+	public abstract CloseableHttpClient buildClient();
+	public abstract void releaseClient(CloseableHttpClient client);
 
 	public String get(String url) {
 		return get(url, null);
@@ -32,7 +33,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 		if (StringUtils.isNotBlank(params)) {
 			sb.append("?").append(params);
 		}
-		CloseableHttpClient client = build();
+		CloseableHttpClient client = buildClient();
 		HttpGet get = new HttpGet(sb.toString());
 		CloseableHttpResponse response = null;
 		try {
@@ -58,6 +59,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 					logger.warn("!!!! IO Exception: {}", e);
 				}
 			}
+			releaseClient(client);
 		}
 		return null;
 	}
@@ -72,7 +74,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 
 	public String post(String url, String params, ContentType contentType) {
 		logger.debug(">>>> http post request: url={}, params={}, contentType={}", url, params, contentType);
-		CloseableHttpClient client = build();
+		CloseableHttpClient client = buildClient();
 		HttpPost post = new HttpPost(url);
 		CloseableHttpResponse response = null;
 		if (StringUtils.isNotBlank(params)) {
@@ -103,6 +105,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 					logger.warn("!!!! IO Exception: {}", e);
 				}
 			}
+			releaseClient(client);
 		}
 		return null;
 	}
@@ -117,7 +120,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 
 	public String put(String url, String params, ContentType contentType) {
 		logger.debug(">>>> http put request: url={}, params={}, contentType={}", url, params, contentType);
-		CloseableHttpClient client = build();
+		CloseableHttpClient client = buildClient();
 		HttpPut put = new HttpPut(url);
 		CloseableHttpResponse response = null;
 		if (StringUtils.isNotBlank(params)) {
@@ -148,6 +151,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 					logger.warn("!!!! IO Exception: {}", e);
 				}
 			}
+			releaseClient(client);
 		}
 		return null;
 	}
@@ -162,7 +166,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 		if (StringUtils.isNotBlank(params)) {
 			sb.append("?").append(params);
 		}
-		CloseableHttpClient client = build();
+		CloseableHttpClient client = buildClient();
 		HttpDelete del = new HttpDelete(sb.toString());
 		CloseableHttpResponse response = null;
 		try {
@@ -188,6 +192,7 @@ public abstract class AbstractHttpBehavior implements HttpBehavior {
 					logger.warn("!!!! IO Exception: {}", e);
 				}
 			}
+			releaseClient(client);
 		}
 		return null;
 	}

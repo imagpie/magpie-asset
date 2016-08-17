@@ -39,8 +39,13 @@ public class LongConnHttpBehavior extends AbstractHttpBehavior {
 	};
 
 	@Override
-	public CloseableHttpClient build() {
+	public CloseableHttpClient buildClient() {
 		return HttpClients.custom().setConnectionManager(poolingmgr).build();
+	}
+
+	@Override
+	public void releaseClient(CloseableHttpClient client) {
+		logger.debug(">>>> do nothing for long connection http behavior!!");
 	}
 
 }
