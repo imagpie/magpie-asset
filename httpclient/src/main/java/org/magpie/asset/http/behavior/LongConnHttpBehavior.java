@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * 用户通过提供"httpclient.properties"文件配制长链接相关参数,例如:
  * <p>
- * <code>
- * maxConns=10
- * <code>
+ * <code> maxConns=10 <code>
  * 
  * @author chenheng
  *
@@ -28,11 +26,13 @@ public class LongConnHttpBehavior extends AbstractHttpBehavior {
 		poolingmgr = new PoolingHttpClientConnectionManager();
 		try {
 			ResourceBundle resource = ResourceBundle.getBundle("httpclient");
-			int maxConns = Integer.parseInt(resource.getString("maxConns"));
-			poolingmgr.setDefaultMaxPerRoute(maxConns);
-			poolingmgr.setMaxTotal(2 * maxConns);
+			int maxPerRoute = Integer.parseInt(resource.getString("maxConnsPerRoute"));
+			int maxTotal = Integer.parseInt(resource.getString("maxConnsTotal"));
+			poolingmgr.setDefaultMaxPerRoute(maxPerRoute);
+			poolingmgr.setMaxTotal(maxTotal);
 		} catch (Exception e) {
-			logger.warn("!!!! httpclient config file not exist or key(s) illegal: {}", e);
+			logger.warn("!!!! please refer the example httpclient.properties in jar and provide a right "
+					+ "config file to overwrite the default value!", e);
 			poolingmgr.setDefaultMaxPerRoute(10);
 			poolingmgr.setMaxTotal(20);
 		}
